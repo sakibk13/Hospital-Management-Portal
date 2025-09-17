@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/DoctorDetails.css';
+import '../components/styles/DoctorDetails.css';
 import { FaSearch } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
+import { showErrorToast } from '../utils/toast';
 
 const DoctorDetails = () => {
   const [doctorsByDepartment, setDoctorsByDepartment] = useState([]);
@@ -18,6 +19,7 @@ const DoctorDetails = () => {
         setDoctorsByDepartment(groupedDoctors);
       } catch (error) {
         console.error('Error fetching doctors:', error);
+        showErrorToast('Error fetching doctors.');
       }
     };
 
@@ -25,12 +27,15 @@ const DoctorDetails = () => {
   }, []);
 
   const groupDoctorsByDepartment = (doctors) => {
-    return doctors.reduce((acc, doctor) => {
+    return doctors.reduce(
+    (acc, doctor) => {
       const department = doctor.department || 'Other';
       acc[department] = acc[department] || [];
       acc[department].push(doctor);
       return acc;
-    }, {});
+    },
+    {}
+  );
   };
 
   const handleSearch = (e) => {
@@ -90,7 +95,7 @@ const DoctorDetails = () => {
                 <div key={doctor._id} className="doctor-card">
                   <div className="doctor-profile-pic-container">
                     <img
-                      src={`/api/doctors/profilepic/${doctor._id}`} // Fetch profile picture using the API
+                      src={`/api/doctors/profilepic/${doctor._id}`}
                       alt={`${doctor.firstName} ${doctor.lastName}`}
                       className="doctor-profile-pic"
                     />
@@ -119,7 +124,6 @@ const DoctorDetails = () => {
                       <div className="doctor-detail">
                         <strong>Availability:</strong> {doctor.availability}
                       </div>
-                     
                     </div>
                   </div>
                 </div>
@@ -129,7 +133,6 @@ const DoctorDetails = () => {
         ))}
       </div>
 
-      {/* Pagination Controls */}
       <div className="pagination-container">
         <button
           className="pagination-button"

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './styles/DoctorProfile.css';
+import '../components/styles/DoctorProfile.css';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const DoctorProfile = ({ email, onClose }) => {
   const [formData, setFormData] = useState({
@@ -17,8 +18,6 @@ const DoctorProfile = ({ email, onClose }) => {
     profilePicture: ''
   });
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -31,7 +30,7 @@ const DoctorProfile = ({ email, onClose }) => {
         setImagePreview(res.data.profilePicture);
       } catch (error) {
         console.error(error);
-        setError('Failed to fetch doctor details.');
+        showErrorToast('Failed to fetch doctor details.');
       }
     };
 
@@ -50,7 +49,7 @@ const DoctorProfile = ({ email, onClose }) => {
 
   const handleUpload = async () => {
     if (!profilePictureFile) {
-      setError('Please select a file to upload.');
+      showErrorToast('Please select a file to upload.');
       return;
     }
 
@@ -66,10 +65,9 @@ const DoctorProfile = ({ email, onClose }) => {
       const pictureUrl = uploadRes.data.profilePicture;
       setFormData({ ...formData, profilePicture: pictureUrl });
       setImagePreview(pictureUrl);
-      setMessage('Profile picture uploaded successfully!');
-      setError('');
+      showSuccessToast('Profile picture uploaded successfully!');
     } catch (error) {
-      setError('Failed to upload profile picture.');
+      showErrorToast('Failed to upload profile picture.');
     }
   };
 
@@ -78,11 +76,9 @@ const DoctorProfile = ({ email, onClose }) => {
 
     try {
       const res = await axios.put('/api/doctors/dupdate', { email, ...formData });
-      setMessage(res.data.message);
-      setError('');
+      showSuccessToast(res.data.message);
     } catch (error) {
-      setMessage('');
-      setError(error.response?.data?.message || 'Failed to update profile.');
+      showErrorToast(error.response?.data?.message || 'Failed to update profile.');
     }
   };
 
@@ -130,7 +126,6 @@ const DoctorProfile = ({ email, onClose }) => {
               </div>
             </div>
 
-            {/* Other form fields */}
             <div className="field">
               <label className="label">First Name</label>
               <div className="control">
@@ -250,8 +245,6 @@ const DoctorProfile = ({ email, onClose }) => {
             </div>
             <button className="button is-primary" type="submit">Update</button>
           </form>
-          {message && <p className="notification is-success">{message}</p>}
-          {error && <p className="notification is-danger">{error}</p>}
         </section>
       </div>
     </div>

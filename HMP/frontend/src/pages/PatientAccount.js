@@ -2,23 +2,29 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PatientProfile from './PatientProfile';
 import 'bulma/css/bulma.min.css';
-import './styles/PatientAccount.css'; 
+import '../components/styles/PatientAccount.css'; 
 import { FaSignOutAlt } from 'react-icons/fa'; 
 import patientAccountImage from '../assets/patientaccount.png';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const PatientAccount = () => {
-  const [patient, setDoctor] = useState(null);
+  const [patient, setPatient] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
         const email = localStorage.getItem('patientEmail'); 
+        if (!email) {
+          showErrorToast('Patient email not found. Please login.');
+          return;
+        }
         const res = await axios.get(`/api/patients/pdetails/email/${email}`);
-        setDoctor(res.data);
+        setPatient(res.data);
       } catch (error) {
         console.error(error);
+        showErrorToast('Error fetching patient details.');
       }
     };
 
@@ -28,6 +34,7 @@ const PatientAccount = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('patientEmail');
+    showSuccessToast('Logged out successfully!');
     window.location.href = '/'; 
   };
 

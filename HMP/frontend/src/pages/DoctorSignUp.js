@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import healingwaveImage from '../assets/healingwave.png'; 
-import './styles/DoctorSignUp.css'; 
+import '../components/styles/DoctorSignUp.css'; 
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const DoctorSignUp = () => {
   const [formData, setFormData] = useState({
@@ -17,9 +18,6 @@ const DoctorSignUp = () => {
     confirmPassword: ''
   });
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-
   const { firstName, lastName, email, sex, dateOfBirth, mobileNumber, password, confirmPassword } = formData;
 
   const handleChange = (e) => {
@@ -29,14 +27,13 @@ const DoctorSignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      showErrorToast('Passwords do not match');
       return;
     }
 
     try {
       const res = await axios.post('/api/doctors/dregister', formData);
-      setMessage(res.data.message);
-      setError('');
+      showSuccessToast(res.data.message);
       setFormData({
         firstName: '',
         lastName: '',
@@ -49,8 +46,7 @@ const DoctorSignUp = () => {
       });
     } catch (error) {
       console.error(error);
-      setMessage('');
-      setError(error.response.data.message || 'Error registering doctor');
+      showErrorToast(error.response.data.message || 'Error registering doctor');
     }
   };
 
@@ -65,8 +61,6 @@ const DoctorSignUp = () => {
         </div>
         <div className="doctor-signup-form">
           <h2>Doctor Account Registration</h2>
-          {message && <Alert variant="success" className="doctor-alert doctor-alert-success">{message}</Alert>}
-          {error && <Alert variant="danger" className="doctor-alert doctor-alert-danger">{error}</Alert>}
           <p className="doctor-signup-quotation">Thank you for registration</p>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="firstName">

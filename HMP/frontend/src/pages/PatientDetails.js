@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles/PatientDetails.css';
+import '../components/styles/PatientDetails.css';
 import { Helmet } from 'react-helmet';
+import { showErrorToast } from '../utils/toast';
 
 const PatientDetails = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +17,7 @@ const PatientDetails = () => {
     } catch (error) {
       console.error('Error searching patients:', error);
       setNoResults(true);
+      showErrorToast('Error searching patients.');
     }
   };
 
@@ -26,7 +28,6 @@ const PatientDetails = () => {
       </Helmet>
       <h2 className="page-title">Patient Details & Medical Info</h2>
       <div className="search-bar">
-       
         <input
           type="text"
           placeholder="Search by name or phone number"

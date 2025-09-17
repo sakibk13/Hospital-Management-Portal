@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles/DoctorLogin.css'; 
-import ECGAnimation from './ECGAnimation';
+import '../components/styles/DoctorLogin.css';
+import ECGAnimation from '../components/ECGAnimation';
 import { FaSignInAlt } from 'react-icons/fa'; 
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const DoctorLogin = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { email, password } = formData;
@@ -25,9 +25,10 @@ const DoctorLogin = () => {
       const res = await axios.post('/api/doctors/dlogin', formData);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('doctorEmail', email); 
+      showSuccessToast('Login successful!');
       window.location.href = '/doctor-account'; 
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      showErrorToast(err.response?.data?.message || 'Login failed');
       setLoading(false);
     }
   };
@@ -62,7 +63,6 @@ const DoctorLogin = () => {
           { <FaSignInAlt />} 
         </button>
       </form>
-      {error && <p className="doctor-login-error-message">{error}</p>}
       {loading && <ECGAnimation />}
       <p className="doctor-login-signup-prompt">
         Don't have an account? <a href="/doctor-signup" className="doctor-login-signup-link">Create one here</a>

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSyncAlt } from 'react-icons/fa';
-import './styles/MedicineDetails.css';
+import '../components/styles/MedicineDetails.css';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const MedicineDetails = () => {
   const [medicines, setMedicines] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const itemsPerPage = 12; 
 
@@ -18,10 +18,10 @@ const MedicineDetails = () => {
         if (response.data && Array.isArray(response.data)) {
           setMedicines(response.data);
         } else {
-          setError('Unexpected data format.');
+          showErrorToast('Unexpected data format.');
         }
       } catch (err) {
-        setError('Failed to fetch medicines. Please check the console for details.');
+        showErrorToast('Failed to fetch medicines. Please check the console for details.');
         console.error(err);
       } finally {
         setLoading(false);
@@ -37,8 +37,10 @@ const MedicineDetails = () => {
       setMedicines(medicines.map(medicine => 
         medicine._id === id ? { ...medicine, strip: newStripValue } : medicine
       ));
+      showSuccessToast('Medicine stock updated successfully!');
     } catch (err) {
       console.error('Failed to update medicine strip count', err);
+      showErrorToast('Failed to update medicine stock.');
     }
   };
 
@@ -56,7 +58,6 @@ const MedicineDetails = () => {
       </Helmet>
       <h1 className="medicine-details-title">Medicine Details</h1>
       {loading && <p className="text-center">Loading...</p>}
-      {error && <p className="text-danger text-center">{error}</p>}
       <div className="columns is-multiline">
         {currentPageMedicines.length > 0 ? (
           currentPageMedicines.map((medicine) => (

@@ -1,13 +1,13 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DoctorProfile from './DoctorProfile';
 import 'bulma/css/bulma.min.css';
-import './styles/DoctorAccount.css';
+import '../components/styles/DoctorAccount.css';
 import { FaSignOutAlt, FaTimes } from 'react-icons/fa';
 import AppointmentsChart from './AppointmentsChart';
 import PatientsChart from './PatientsChart';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const DoctorAccount = () => {
   const [doctor, setDoctor] = useState(null);
@@ -23,23 +23,25 @@ const DoctorAccount = () => {
     const fetchDoctorDetails = async () => {
       try {
         const email = localStorage.getItem('doctorEmail');
+        if (!email) {
+          showErrorToast('Doctor email not found. Please login.');
+          return;
+        }
         const res = await axios.get(`/api/doctors/ddetails/email/${email}`);
         setDoctor(res.data);
 
-        // Fetch total appointments
         const appointmentRes = await axios.get(`/api/appointments/count/${email}`);
         setTotalAppointments(appointmentRes.data.count);
 
-        // Fetch total patients
         const patientRes = await axios.get(`/api/prescriptions/count-patients?doctorEmail=${email}`);
         setTotalPatients(patientRes.data.count);
 
-        // Fetch today's appointments
         const todayAppointmentsRes = await axios.get(`/api/appointments/today-appointments?doctorEmail=${email}`);
         setTodayAppointments(todayAppointmentsRes.data);
 
       } catch (error) {
         console.error(error);
+        showErrorToast('Error fetching doctor details or appointments.');
       }
     };
 
@@ -49,6 +51,7 @@ const DoctorAccount = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('doctorEmail');
+    showSuccessToast('Logged out successfully!');
     window.location.href = '/';
   };
 
@@ -201,8 +204,6 @@ const DoctorAccount = () => {
                     <p><strong>Time:</strong> {appointment.timeSlot} am</p>
                     <p><strong>Patient:</strong> {appointment.patientName}</p>
                     <p><strong>Email:</strong> {appointment.patientEmail}</p>
-                 
-                    
                   </div>
                 ))}
               </div>

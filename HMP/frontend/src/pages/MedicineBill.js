@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles/MedicineBill.css';
+import '../components/styles/MedicineBill.css';
 import { FaTimes } from 'react-icons/fa';
-import { generateMedicineBillPDF } from './PDFGenerator';
+import { generateMedicineBillPDF } from '../components/PDFGenerator';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const MedicineBill = () => {
   const [bills, setBills] = useState([]);
   const [healthCard, setHealthCard] = useState(null);
-  const [message, setMessage] = useState('');
   const email = localStorage.getItem('patientEmail');
   const [activeTab, setActiveTab] = useState('medicine');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch the bills
         const billResponse = await axios.get(`/api/medicineBill/bills/${email}`);
         setBills(billResponse.data);
 
-        // Fetch the health card
         const cardResponse = await axios.get(`/api/healthcards/${email}`);
         setHealthCard(cardResponse.data);
       } catch (error) {
         console.error('Failed to fetch data:', error);
+        showErrorToast('Failed to fetch data.');
       }
     };
 
@@ -36,32 +35,31 @@ const MedicineBill = () => {
         email,
         topUpAmount: healthCard.topUpAmount
       });
-      setMessage(response.data.message);
+      showSuccessToast(response.data.message);
 
-      // Update the bill status in the local state
       setBills(bills.map(bill => bill._id === billId ? { ...bill, paid: true } : bill));
     } catch (error) {
-      alert(error.response?.data?.error || 'Payment failed');
+      showErrorToast(error.response?.data?.error || 'Payment failed');
     }
   };
 
   const handleRemoveBill = (billId) => {
     if (window.confirm("Are you sure you want to remove this bill?")) {
       setBills(bills.filter(bill => bill._id !== billId));
+      showSuccessToast('Bill removed successfully!');
     }
   };
 
   const handleDownloadPDF = (bill) => {
-    generateMedicineBillPDF([bill]); 
+    generateMedicineBillPDF([bill]);
+    showSuccessToast('PDF downloaded successfully!');
   };
 
   return (
-    
     <div className="medicine-bill-container">
        <Helmet>
         <title>Medicine Bill Page</title>
       </Helmet>
-      {message && <p className="success-message">{message}</p>}
 
       <div className="tabs">
         <button className={`tab ${activeTab === 'medicine' ? 'active' : ''}`} onClick={() => setActiveTab('medicine')}>

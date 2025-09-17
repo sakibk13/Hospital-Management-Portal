@@ -2,24 +2,24 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import './styles/Items.css';
+import '../components/styles/Items.css';
 import 'bulma/css/bulma.min.css';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const Items = () => {
   const [items, setItems] = useState([]);
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [type, setType] = useState('Test');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage] = useState(5); 
+  const [itemsPerPage] = useState(5);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
     if (!token) {
+      showErrorToast('You are not authorized to access this page. Please login as Admin.');
       navigate('/admin-login');
     } else {
       fetchItems();
@@ -31,7 +31,7 @@ const Items = () => {
       const res = await axios.get('/api/items');
       setItems(res.data);
     } catch (err) {
-      setError('Failed to fetch items.');
+      showErrorToast('Failed to fetch items.');
     }
   };
 
@@ -41,19 +41,16 @@ const Items = () => {
       setName('');
       setPrice('');
       setType('Test');
-      setError('');
-      setSuccess('Item added to the list successfully!');
+      showSuccessToast('Item added to the list successfully!');
       fetchItems();
     } catch (err) {
-      setError('Failed to add item.');
-      setSuccess('');
+      showErrorToast('Failed to add item.');
     }
   };
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
   };
-
   
   const offset = currentPage * itemsPerPage;
   const currentItems = items.slice(offset, offset + itemsPerPage);
@@ -105,8 +102,6 @@ const Items = () => {
             Add Item
           </button>
         </div>
-        {error && <p className="has-text-danger items-error">{error}</p>}
-        {success && <p className="has-text-success items-success">{success}</p>}
         <ul className="items-list">
           {currentItems.map((item) => (
             <li key={item._id} className="items-list-item">

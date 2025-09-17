@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import 'bulma/css/bulma.min.css';
-import './styles/Home.css';
+import '../components/styles/Home.css';
 import dnpImg from '../assets/dnp.jpg';
 import DoctorLogin from './DoctorLogin';
 import PatientLogin from './PatientLogin';
 import Chatbot from './Chatbot';
-import NewsTicker from './NewsTicker';
+import NewsTicker from '../components/NewsTicker';
 import { Helmet } from 'react-helmet';
 
 const Home = () => {

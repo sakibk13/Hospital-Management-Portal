@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import 'bulma/css/bulma.min.css';
-import './styles/Chatbot.css';
+import '../components/styles/Chatbot.css';
 import { FaPaperPlane } from 'react-icons/fa'; 
 import { Helmet } from 'react-helmet';
-import messageSound from '../assets/message.wav';
+import { showErrorToast } from '../utils/toast';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([
@@ -23,19 +23,14 @@ const Chatbot = () => {
       const response = await axios.post('/api/chatbot/chat', { message: input });
       const botMessage = { sender: 'bot', text: response.data.response };
       setMessages([...messages, userMessage, botMessage]);
-
-     
-      const audio = new Audio(messageSound);
-      audio.play();
     } catch (error) {
       const botMessage = { sender: 'bot', text: 'Sorry, there was an error. Please try again.' };
       setMessages([...messages, userMessage, botMessage]);
+      showErrorToast('Error communicating with chatbot.');
     }
 
     setInput('');
   };
-
-  
 
   return (
     <div className={`chatbox ${!showChatbox ? 'hidden' : ''}`}>
@@ -44,7 +39,6 @@ const Chatbot = () => {
       </Helmet>
       <header className="chatbox-header">
         <p className="chatbox-title">Chat with us</p>
-        
       </header>
       <section className="chatbox-body">
         {messages.map((msg, index) => (

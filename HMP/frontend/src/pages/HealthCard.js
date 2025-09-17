@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/HealthCard.css';
+import '../components/styles/HealthCard.css';
 import healingWave from '../assets/healingwave.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Helmet } from 'react-helmet';
+import { showSuccessToast, showErrorToast } from '../utils/toast';
 
 const HealthCard = () => {
   const [formData, setFormData] = useState({
@@ -15,22 +16,15 @@ const HealthCard = () => {
   });
   const [topUpAmount, setTopUpAmount] = useState('');
   const [cardData, setCardData] = useState(null);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const { patientName, email, phoneNumber, bloodGroup } = formData;
 
-  
   useEffect(() => {
     const savedEmail = localStorage.getItem('patientEmail');
     if (savedEmail) {
       fetchCardData(savedEmail);
-      
     }
   }, []);
-
-
-
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -39,31 +33,23 @@ const HealthCard = () => {
     try {
       const res = await axios.post('/api/healthCards/register', formData);
       setCardData(res.data);
-      setError('');
-      setSuccess('Registration successful');
-  
+      showSuccessToast('Registration successful');
       localStorage.setItem('patientEmail', email);
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
-      setSuccess('');
-      
+      showErrorToast(err.response?.data?.message || 'Registration failed');
     }
   };
 
   const handleTopUp = async e => {
     e.preventDefault();
     if (!topUpAmount) {
-      setError('Top-up amount is required');
-     
-      setSuccess('');
+      showErrorToast('Top-up amount is required');
       return;
     }
     try {
       const email = localStorage.getItem('patientEmail');
       if (!email) {
-        setError('User email not found');
-       
-        setSuccess('');
+        showErrorToast('User email not found');
         return;
       }
       const res = await axios.put('/api/healthCards/topup', { topUpAmount }, {
@@ -72,13 +58,9 @@ const HealthCard = () => {
         }
       });
       setCardData(res.data.card);
-      setError('');
-      setSuccess('Top-up successful');
-   
+      showSuccessToast('Top-up successful');
     } catch (err) {
-      setError(err.response?.data?.message || 'Top-up failed');
-      
-      setSuccess('');
+      showErrorToast(err.response?.data?.message || 'Top-up failed');
     }
   };
 
@@ -86,10 +68,9 @@ const HealthCard = () => {
     try {
       const res = await axios.get(`/api/healthCards/${email}`);
       setCardData(res.data);
-      setError('');
     } catch (error) {
       console.error(error);
-      setError('Health card not found');
+      showErrorToast('Health card not found');
     }
   };
 
@@ -112,8 +93,6 @@ const HealthCard = () => {
             <input type="number" value={topUpAmount} onChange={e => setTopUpAmount(e.target.value)} placeholder="Enter Amount" required />
             <button type="submit">Top Up</button>
           </form>
-          {error && <p className="error-message">{error}</p>}
-          {success && <p className="success-message">{success}</p>}
         </div>
         {cardData && (
           <div className="health-card">

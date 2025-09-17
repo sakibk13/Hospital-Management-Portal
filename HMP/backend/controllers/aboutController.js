@@ -19,9 +19,9 @@ const aboutData = {
     ],
     contactInfo: {
         emails: [
-            "kawsarahmed1@gmail.com",
-            "mourikaniger@gmail.com",
-            "sararshihab@gmail.com",
+            "raisul@gmail.com",
+            "samiremon@gmail.com",
+            "farhanlabib@gmail.com",
         ],
         phones: [
             "+880 1832 465 446",
