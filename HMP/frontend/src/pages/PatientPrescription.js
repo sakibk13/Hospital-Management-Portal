@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { prescriptionPDF } from './PDFGenerator';
-import './styles/PatientPrescription.css';
+import { prescriptionPDF } from '../components/PDFGenerator';
+import '../components/styles/PatientPrescription.css';
 import { FaTimes } from 'react-icons/fa';
 import { Helmet } from 'react-helmet'; 
 

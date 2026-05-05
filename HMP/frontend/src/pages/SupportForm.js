@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles/SupportForm.css'; 
+import '../components/styles/SupportForm.css'; 
 
 const SupportForm = () => {
   const [formData, setFormData] = useState({

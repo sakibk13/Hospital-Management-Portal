@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert } from 'react-bootstrap';
 import healingwaveImage from '../assets/healingwave.png'; 
-import './styles/PatientSignUp.css';
+import '../components/styles/PatientSignUp.css';
 import { Helmet } from 'react-helmet';
 
 const PatientSignUp = () => {

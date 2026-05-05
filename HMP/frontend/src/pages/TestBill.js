@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles/TestBill.css';
+import '../components/styles/TestBill.css';
 import { FaTimes } from 'react-icons/fa';
-import { generateTestBillPDF } from './PDFGenerator';
+import { generateTestBillPDF } from '../components/PDFGenerator';
 import { Helmet } from 'react-helmet';
 
 const TestBill = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/PatientProfile.css';
+import '../components/styles/PatientProfile.css';
 import { Helmet } from 'react-helmet'; 
 
 const PatientProfile = ({ email, onClose }) => {

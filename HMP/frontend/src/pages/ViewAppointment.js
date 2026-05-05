@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles/ViewAppointment.css'; 
+import '../components/styles/ViewAppointment.css'; 
 import { Helmet } from 'react-helmet';
 
 const ViewAppointment = () => {

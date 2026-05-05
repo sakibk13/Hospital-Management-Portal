@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/TestService.css';
+import '../components/styles/TestService.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Pagination from 'react-js-pagination';
 import successSoundFile from '../assets/success.mp3';

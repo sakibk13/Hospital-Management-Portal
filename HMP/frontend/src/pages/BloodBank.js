@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/BloodBank.css'; 
+import '../components/styles/BloodBank.css'; 
 import { Link } from 'react-router-dom';
 import bloodbankImage from '../assets/bloodbank.png';
 import blooddonorImage from '../assets/blooddonor.png';

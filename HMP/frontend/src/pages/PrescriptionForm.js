@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { prescriptionPDF } from './PDFGenerator'; 
-import './styles/PrescriptionForm.css';
+import { prescriptionPDF } from '../components/PDFGenerator'; 
+import '../components/styles/PrescriptionForm.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faDownload } from '@fortawesome/free-solid-svg-icons';
 import successSoundFile from '../assets/success.mp3';

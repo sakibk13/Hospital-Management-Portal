@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/BuyMedicine.css';
+import '../components/styles/BuyMedicine.css';
 import successSoundFile from '../assets/success.mp3';
 import errorSoundFile from '../assets/error.mp3';
 import { Helmet } from 'react-helmet';

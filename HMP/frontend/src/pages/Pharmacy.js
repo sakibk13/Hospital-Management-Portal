@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/Pharmacy.css';
+import '../components/styles/Pharmacy.css';
 import { FaSearch } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 
